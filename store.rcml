@@ -1,0 +1,987 @@
+//pallet 1
+define P1B1_X 9500
+define P1B1_Y -2500
+define P1B1_Z 1500
+
+define P1B2_X 9500
+define P1B2_Y -1500
+define P1B2_Z 1500
+
+define P1B3_X 8500
+define P1B3_Y -2500
+define P1B3_Z 1500
+
+define P1B4_X 8500
+define P1B4_Y -1500
+define P1B4_Z 1500
+
+//pallet 2
+define P2B1_X 7500
+define P2B1_Y -2500
+define P2B1_Z 1500
+
+define P2B2_X 7500
+define P2B2_Y -1500
+define P2B2_Z 1500
+
+define P2B3_X 6500
+define P2B3_Y -2500
+define P2B3_Z 1500
+
+define P2B4_X 6500
+define P2B4_Y -1500
+define P2B4_Z 1500
+
+//pallet 3
+define P3B1_X 5500
+define P3B1_Y -2500
+define P3B1_Z 1500
+
+define P3B2_X 5500
+define P3B2_Y -1500
+define P3B2_Z 1500
+
+define P3B3_X 4500
+define P3B3_Y -2500
+define P3B3_Z 1500
+
+define P3B4_X 4500
+define P3B4_Y -1500
+define P3B4_Z 1500
+
+//pallet 4
+define P4B1_X 3500
+define P4B1_Y -2500
+define P4B1_Z 1500
+
+define P4B2_X 3500
+define P4B2_Y -1500
+define P4B2_Z 1500
+
+define P4B3_X 2500
+define P4B3_Y -2500
+define P4B3_Z 1500
+
+define P4B4_X 2500
+define P4B4_Y -1500
+define P4B4_Z 1500
+
+//posts
+define POST1_X 12000
+define POST1_Y -2200
+define POST1_Z 1500
+
+define POST2A_X 3300
+define POST2A_Y 2200
+define POST2A_Z 1500
+
+define POST2B_X 15000
+define POST2B_Y 2200
+define POST2B_Z 1500
+
+define POST6_1_X 6000
+define POST6_1_Y 2200
+define POST6_1_Z 1500
+
+define POST6_2_X 8000
+define POST6_2_Y 2200
+define POST6_2_Z 1500
+
+define POST6_3_X 10000
+define POST6_3_Y 2200
+define POST6_3_Z 1500
+
+define POST6_4_X 12000
+define POST6_4_Y 2200
+define POST6_4_Z 1500
+
+define POST7_X 20000
+define POST7_Y -2200
+define POST7_Z 1500
+
+define POST11_X 16000
+define POST11_Y -2200
+define POST11_Z 1500
+
+define POST12_X 14000
+define POST12_Y -2200
+define POST12_Z 1500
+
+define HOME_X 0
+
+define SYS_ARRAY "SYS_ARRAY"
+define TASK_ARRAY "TASK_ARRAY"
+define BARRELS_ARRAY "BARRELS_ARRAY" //barrels_id, value is a post_number
+define ALL_BARRELS "ALL_BARRELS" // global value for barells count
+define ROBOT "ROBOT"	//global value for robot
+define POST_BASE_ARRAY "POST_BASE_ARRAY" //X coord of posts
+define PAUSE_ARRAY "PAUSE_ARRAY" // flag for pause/unpause of work with pallets
+define ROBOT_BUSY "ROBOT_BUSY"	// flag for busy/free robot
+define PALLETS_ARRAY "PALLETS_ARRAY"	//value is barells count on pallets[k]
+define EMPTY_PALLETS "EMPTY_PALLETS" //empty pallets or not
+define ACTIVE_PALLET "ACTIVE_PALLET" // global var for active pallet for work
+define CONVEER "CONVEER"
+
+define SYS_EXIT 0
+define TASK_PALLETS_WORK_OFF_ID 0 
+define TASK_PALLETS_WORK_ON_ID 1	
+define TASK_ADD_PALLET_EMPTY_ID 2	
+define TASK_ADD_PALLET_POST1_ID 3
+define TASK_ADD_PALLET_POST2_ID 4
+define TASK_BARRELS_LOADING_ID 5
+define TASK_BARRELS_CLEAN_ID 6
+define TASK_MOVE2A_ID 7
+define TASK_MOVE2B_ID 8
+
+define GRIP_OPEN 0
+define GRIP_CLOSE 1
+define UP_DOWN_DIST 900
+//don't change posts numbers if you don't understand program FULL and CLEAR
+define HOME 0
+define P1B1 1
+define P1B2 2
+define P1B3 3
+define P1B4 4
+define P2B1 5
+define P2B2 6
+define P2B3 7
+define P2B4 8
+define P3B1 9
+define P3B2 10
+define P3B3 11
+define P3B4 12
+define P4B1 13
+define P4B2 14
+define P4B3 15
+define P4B4 16
+define POST1 17
+define POST2A 18
+define POST2B 19
+define POST6_1 20
+define POST6_2 21
+define POST6_3 22
+define POST6_4 23
+define POST7 24
+define POST8 25
+define POST9 26
+define POST10 27
+define POST11 28
+define POST12 29
+
+function Init(){
+	array.create(SYS_ARRAY, 1);
+	array.create(TASK_ARRAY, 10);
+	array.create(BARRELS_ARRAY, 50);
+	array.create(ALL_BARRELS, 1);
+	array.create(ROBOT, 1);
+	array.create(POST_BASE_ARRAY, 30);
+	array.create(PAUSE_ARRAY, 1);
+	array.create(ROBOT_BUSY, 1);
+	array.create(PALLETS_ARRAY, 4);
+	array.create(EMPTY_PALLETS, 4);
+	array.create(ACTIVE_PALLET, 1);
+	array.create(CONVEER, 1);
+	
+	array.set(SYS_ARRAY, SYS_EXIT, 0);
+	array.set(ALL_BARRELS, 0, 0);
+	array.set(PAUSE_ARRAY, 0, 0);
+	array.set(ROBOT_BUSY, 0, 0);
+	
+	array.set(POST_BASE_ARRAY, HOME, HOME_X);
+	array.set(POST_BASE_ARRAY, P1B1, P1B1_X);
+	array.set(POST_BASE_ARRAY, P1B2, P1B2_X);
+	array.set(POST_BASE_ARRAY, P1B3, P1B3_X);
+	array.set(POST_BASE_ARRAY, P1B4, P1B4_X);
+	array.set(POST_BASE_ARRAY, P2B1, P2B1_X);
+	array.set(POST_BASE_ARRAY, P2B2, P2B2_X);
+	array.set(POST_BASE_ARRAY, P2B3, P2B3_X);
+	array.set(POST_BASE_ARRAY, P2B4, P2B4_X);
+	array.set(POST_BASE_ARRAY, P3B1, P3B1_X);
+	array.set(POST_BASE_ARRAY, P3B2, P3B2_X);
+	array.set(POST_BASE_ARRAY, P3B3, P3B3_X);
+	array.set(POST_BASE_ARRAY, P3B4, P3B4_X);
+	array.set(POST_BASE_ARRAY, P4B1, P4B1_X);
+	array.set(POST_BASE_ARRAY, P4B2, P4B2_X);
+	array.set(POST_BASE_ARRAY, P4B3, P4B3_X);
+	array.set(POST_BASE_ARRAY, P4B4, P4B4_X);
+	array.set(POST_BASE_ARRAY, POST1, POST1_X);
+	array.set(POST_BASE_ARRAY, POST2A, POST2A_X);
+	array.set(POST_BASE_ARRAY, POST2B, POST2B_X);
+	array.set(POST_BASE_ARRAY, POST6_1, POST6_1_X);
+	array.set(POST_BASE_ARRAY, POST6_2, POST6_2_X);
+	array.set(POST_BASE_ARRAY, POST6_3, POST6_3_X);
+	array.set(POST_BASE_ARRAY, POST6_4, POST6_4_X);
+	array.set(POST_BASE_ARRAY, POST7, POST7_X);
+	array.set(POST_BASE_ARRAY, POST11, POST11_X);
+	array.set(POST_BASE_ARRAY, POST12, POST12_X);	
+}
+
+function RobotBusy(){
+	a = array.get(ROBOT_BUSY, 0);
+	return a;
+}
+
+function robot_robodk::Joint1_PostForJoint7(j1value, post_number){	
+	robot->SetJointPos(1, j1value);
+	robot->SetJointPos(2, 0);
+	robot->SetJointPos(3, 0);
+	robot->SetJointPos(4, 0);
+	robot->SetJointPos(5, -90);
+	robot->SetJointPos(6, 0);
+	distance = array.get(POST_BASE_ARRAY, post_number) - 700 ; // move joint 7 to post №post_number
+	if(distance < 0){
+		distance = 0;
+	}
+	robot->SetJointPos(7, distance);	
+	robot->MoveToJoints();
+}
+
+function robot_robodk::JointAlongPlatform(){
+	robot->SetJointPos(1,0);
+	i=2;
+		loop{
+			tmp = robot->GetJointPos(i);
+			robot->SetJointPos(i, tmp);
+			i = i+1;
+			if(i >= 7)
+			{ 
+				break;
+			}
+		}
+	robot->MoveToJoints();
+}
+
+function SetExit(value){
+	array.set(SYS_ARRAY, SYS_EXIT, value);
+	if(value == 1){
+		dashboard.SetNoTaskWait("", 1);
+	}
+	robot->Joint1_PostForJoint7(0, HOME);	
+}
+
+function IsExit(){
+	return array.get(SYS_ARRAY, SYS_EXIT);
+}
+
+function robot_robodk::LocalMove(dx,dy,dz){
+	x = robot->GetPosX();
+	y = robot->GetPosY();
+	z = robot->GetPosZ();
+	r = robot->GetPosR();
+	p = robot->GetPosP();
+	w = robot->GetPosW();
+	robot->MoveTo(x+dx, y+dy, z+dz, r, p, w);	
+}
+
+function GrappleWork(open_close_value){
+	if( open_close_value == GRIP_OPEN)
+	{
+		system.sleep(600); //Release
+	}
+	if(open_close_value == GRIP_CLOSE)
+	{
+		system.sleep(600); // Grab
+	}
+}
+
+function GrabRelease(open_close_value){
+	robot->LocalMove(0,0, -UP_DOWN_DIST);
+	GrappleWork(open_close_value);
+	robot->LocalMove(0,0, UP_DOWN_DIST);
+}
+
+function MoveToPost(post_number){
+	robot->JointAlongPlatform();
+	robot->Joint1_PostForJoint7(0, post_number);
+	loop{
+		if(WorkIsPaused()){
+			system.sleep(1000);		}
+		else
+		{
+			if(post_number>=POST2A && post_number <= POST6_4){
+				robot->Joint1_PostForJoint7(90, post_number);	
+			}
+			else{
+				robot->Joint1_PostForJoint7(-90, post_number);	
+			}
+			
+			if(post_number == P1B1){
+				robot->MoveTo(P1B1_X, P1B1_Y, P1B1_Z, -180, 0, 0);	}
+			if(post_number == P1B2){
+				robot->MoveTo(P1B2_X, P1B2_Y, P1B2_Z, -180, 0, 0);	}
+			if(post_number == P1B3){
+				robot->MoveTo(P1B3_X, P1B3_Y, P1B3_Z, -180, 0, 0);	}
+			if(post_number == P1B4){
+				robot->MoveTo(P1B4_X, P1B4_Y, P1B4_Z, -180, 0, 0);	}
+			if(post_number == P2B1){
+				robot->MoveTo(P2B1_X, P2B1_Y, P2B1_Z, -180, 0, 0);	}
+			if(post_number == P2B2){
+				robot->MoveTo(P2B2_X, P2B2_Y, P2B2_Z, -180, 0, 0);	}
+			if(post_number == P2B3){
+				robot->MoveTo(P2B3_X, P2B3_Y, P2B3_Z, -180, 0, 0);	}
+			if(post_number == P2B4){
+				robot->MoveTo(P2B4_X, P2B4_Y, P2B4_Z, -180, 0, 0);	}
+			if(post_number == P3B1){
+				robot->MoveTo(P3B1_X, P3B1_Y, P3B1_Z, -180, 0, 0);	}
+			if(post_number == P3B2){
+				robot->MoveTo(P3B2_X, P3B2_Y, P3B2_Z, -180, 0, 0);	}
+			if(post_number == P3B3){
+				robot->MoveTo(P3B3_X, P3B3_Y, P3B3_Z, -180, 0, 0);	}
+			if(post_number == P3B4){
+				robot->MoveTo(P3B4_X, P3B4_Y, P3B4_Z, -180, 0, 0);	}
+			if(post_number == P4B1){
+				robot->MoveTo(P4B1_X, P4B1_Y, P4B1_Z, -180, 0, 0);	}
+			if(post_number == P4B2){
+				robot->MoveTo(P4B2_X, P4B2_Y, P4B2_Z, -180, 0, 0);	}
+			if(post_number == P4B3){
+				robot->MoveTo(P4B3_X, P4B3_Y, P4B3_Z, -180, 0, 0);	}
+			if(post_number == P4B4){
+				robot->MoveTo(P4B4_X, P4B4_Y, P4B4_Z, -180, 0, 0);	}
+			if(post_number == POST1){
+				robot->MoveTo(POST1_X, POST1_Y, POST1_Z, -180, 0, 0);	}
+			if(post_number == POST2A){
+				robot->MoveTo(POST2A_X, POST2A_Y, POST2A_Z, -180, 0, 0);	}
+			if(post_number == POST2B){
+				robot->MoveTo(POST2B_X, POST2B_Y, POST2B_Z, -180, 0, 0);	}
+			if(post_number == POST6_1){
+				robot->MoveTo(POST6_1_X, POST6_1_Y, POST6_1_Z, -180, 0, 0);	}
+			if(post_number == POST6_2){
+				robot->MoveTo(POST6_2_X, POST6_2_Y, POST6_2_Z, -180, 0, 0);	}
+			if(post_number == POST6_3){
+				robot->MoveTo(POST6_3_X, POST6_3_Y, POST6_3_Z, -180, 0, 0);	}
+			if(post_number == POST6_4){
+				robot->MoveTo(POST6_4_X, POST6_4_Y, POST6_4_Z, -180, 0, 0);	}
+			if(post_number == POST7){
+				robot->MoveTo(POST7_X, POST7_Y, POST7_Z, -180, 0, 0);	}
+			if(post_number == POST11){
+				robot->MoveTo(POST11_X, POST11_Y, POST11_Z, -180, 0, 0);	}
+			if(post_number == POST12){
+				robot->MoveTo(POST12_X, POST12_Y, POST12_Z, -180, 0, 0);	}	
+			break;
+		}
+	}
+}
+
+function FromPostToPost(post_start, post_end){
+	num = FindBarrelOnPost(post_start);	
+	MoveToPost(post_start);
+	GrabRelease(GRIP_CLOSE);
+	j1 = robot->GetJointPos(1);
+	robot->Joint1_PostForJoint7(j1, post_start);
+	
+	MoveToPost(post_end);
+	GrabRelease(GRIP_OPEN);
+	array.set(BARRELS_ARRAY, num, post_end);
+	j1 = robot->GetJointPos(1);
+	robot->Joint1_PostForJoint7(j1, post_end);
+	
+	robot->Joint1_PostForJoint7(0, post_end);
+}
+
+function WorkPalletsOFF(){ // pause robot's moving from post to post
+	TaskTypeID = array.get(TASK_ARRAY, TASK_PALLETS_WORK_OFF_ID);
+	loop{
+		TaskID = dashboard.AddTask("", TaskTypeID, 1);
+		if(IsExit()){
+			break;
+		}
+		dashboard.SetTaskStatus(TaskID, 1);
+		dashboard.SetTaskProgerss(TaskID, 0);
+		array.set(PAUSE_ARRAY, 0, 1);
+		loop{
+			tmp = array.get(PAUSE_ARRAY, 0);
+			system.sleep(1000);
+			if( tmp == 0 ){
+				break;
+			}			
+		}		
+		dashboard.SetTaskStatus(TaskID, 2);
+		dashboard.SetTaskProgerss(TaskID, 100);
+	}	
+}
+
+function WorkPalletsON(){	//unpause robot's moving
+	TaskTypeID = array.get(TASK_ARRAY, TASK_PALLETS_WORK_ON_ID);
+	loop{
+		TaskID = dashboard.AddTask("", TaskTypeID, 1);
+		if(IsExit()){
+			break;
+		}
+		dashboard.SetTaskStatus(TaskID, 1);
+		dashboard.SetTaskProgerss(TaskID, 0);
+		
+		array.set(PAUSE_ARRAY, 0, 0);
+		
+		dashboard.SetTaskStatus(TaskID, 2);
+		dashboard.SetTaskProgerss(TaskID, 100);		
+	}	
+}
+
+function WorkIsPaused(){
+	return array.get(PAUSE_ARRAY, 0);
+}
+
+function AddPallet(){
+	TaskTypeID = array.get(TASK_ARRAY, TASK_ADD_PALLET_EMPTY_ID);
+	loop{
+		TaskID = dashboard.AddTask("", TaskTypeID, 1);
+		if(IsExit()){
+			break;
+		}
+		loop{
+			if(RobotBusy()){
+				dashboard.SetTaskStatus(TaskID, 0);
+				system.sleep(1000);
+			}
+			else{
+				array.set(ROBOT_BUSY, 0, 1);
+				
+				pallet_number = dashboard.GetTaskParam(TaskID, 0);
+				barrels_count = dashboard.GetTaskParam(TaskID, 1);
+				
+				old_barrels_count = array.get(ALL_BARRELS, 0);
+				array.set(ALL_BARRELS, 0, old_barrels_count + barrels_count);
+				ch = 1;
+				loop{
+					num = old_barrels_count + ch - 1; 
+					post_num = 4*(pallet_number - 1) + ch; //banded with posts_number of barrels on pallets
+					array.set(BARRELS_ARRAY, num, post_num );
+					ch = ch+1;
+					if (ch>barrels_count){break;}
+				}
+				Barrels_list();
+				DoPalletArrived(pallet_number, barrels_count, TaskID);
+				
+				array.set(ROBOT_BUSY, 0, 0);				
+				break;
+			}
+		}
+	}
+}
+
+function FindBarrelOnPost(POST_ID){
+	num = -1;
+	i = 0;	
+	n = array.get(ALL_BARRELS, 0);
+	loop{
+		if(array.get(BARRELS_ARRAY, i) == POST_ID){
+			num = i;
+			break;
+		}
+		i = i+1;
+		if(i>=n){break;}
+	}	
+	return num;
+}
+
+function Barrels_list(){
+	n = array.get(ALL_BARRELS, 0);
+	i = 0;
+	system.echo("\n");
+	loop{
+		post = array.get(BARRELS_ARRAY, i);
+		system.echo("Barrel ",i," on post", post,"\n");
+		i = i+1;
+		if(i>=n){break;}
+	}
+	system.echo("\n");
+}
+
+function DoPalletArrived(pallet_number, barrels_count, TaskID){
+	if (pallet_number == 0){
+		system.echo("Incorrect pallet number");
+		dashboard.SetTaskStatus(TaskID, 3);
+		return;
+	}
+	if(barrels_count == 0){
+		system.echo("Incorrect barrels count");
+		dashboard.SetTaskStatus(TaskID, 3);
+		return;
+	}	
+	array.set(PALLETS_ARRAY, pallet_number-1, barrels_count);
+	ch = 1;
+	dashboard.SetTaskStatus(TaskID, 1);
+	loop{
+		MoveFromPalletToPost1(pallet_number, ch);
+		
+		percent = 100/barrels_count * ch;
+		dashboard.SetTaskProgerss(TaskID, percent);
+		ch = ch+1;
+		if(ch>barrels_count){break;}
+	}	
+	
+	system.echo("Pallet ", pallet_number," ready\n");
+	dashboard.SetTaskProgerss(TaskID, 100);
+	dashboard.SetTaskStatus(TaskID, 2);
+}
+
+function MoveFromPalletToPost1(pallet_number, barrels_number){
+	TaskTypeID = array.get(TASK_ARRAY, TASK_ADD_PALLET_POST1_ID);
+	TaskID = dashboard.AddTask("", TaskTypeID, 0);
+	Robot = array.get(ROBOT, 0);
+	dashboard.SetRobotBusy(Robot, TaskID);
+	dashboard.SetTaskStatus(TaskID, 1);
+	dashboard.SetTaskProgerss(TaskID, 0);
+	
+	p_b_num = (pallet_number-1)*4+barrels_number;
+	FromPostToPost(p_b_num, POST1);	
+	dashboard.SetTaskProgerss(TaskID, 50);
+	system.sleep(600);
+	FromPostToPost(POST1, p_b_num);
+	dashboard.SetRobotFree(Robot);
+	dashboard.SetTaskProgerss(TaskID, 100);
+	dashboard.SetTaskStatus(TaskID, 2);
+}
+
+function LoadBarrels(){
+	TaskTypeID = array.get(TASK_ARRAY, TASK_BARRELS_LOADING_ID);
+	loop{
+		TaskID = dashboard.AddTask("", TaskTypeID, 1);
+		if(IsExit()){
+			break;
+		}		
+		pallet_number = dashboard.GetTaskParam(TaskID, 0);
+		barrels_count = array.get(PALLETS_ARRAY, pallet_number-1);
+		i=1;
+		loop{
+			if(array.get(ACTIVE_PALLET, 0) == 0){
+				array.set(ACTIVE_PALLET, 0, pallet_number);
+				break;
+			}
+			else{
+				system.sleep(1000);
+			}
+		}
+		Robot = array.get(ROBOT, 0);
+		dashboard.SetRobotBusy(Robot, TaskID);
+		dashboard.SetTaskStatus(TaskID, 1);
+		dashboard.SetTaskProgerss(TaskID, 0);
+		loop{
+			~MoveFromPalletToPost2(pallet_number, i);
+			i = i+1;
+			system.sleep(1000);
+			if (i>barrels_count){break;}
+		}
+		dashboard.SetTaskProgerss(TaskID, 100);
+		dashboard.SetTaskStatus(TaskID, 2);
+		dashboard.SetRobotFree(Robot);
+		system.sleep(1000);
+	}
+}
+
+function MoveFromPalletToPost2(pallet_number, barrel_number){
+	TaskTypeID = array.get(TASK_ARRAY, TASK_ADD_PALLET_POST2_ID);	
+	TaskID = dashboard.AddTask("", TaskTypeID, 0);			
+	Robot = array.get(ROBOT, 0);			
+	loop{		
+		if(!RobotBusy()){			
+			if(FindBarrelOnPost(POST2A) == -1 || FindBarrelOnPost(POST2B) == -1){
+				array.set(ROBOT_BUSY, 0, 1);
+				dashboard.SetTaskStatus(TaskID, 1);
+				dashboard.SetTaskProgerss(TaskID, 0);	
+				dashboard.SetRobotBusy(Robot, TaskID);	
+				post_num = 4*(pallet_number - 1) + barrel_number;
+				if (FindBarrelOnPost(POST2A) == -1){
+					system.mutex_lock("robot");
+					FromPostToPost(post_num, POST2A);
+					system.mutex_unlock("robot");
+					system.echo("Post 2A is work\n");
+				}
+				else {
+					if(FindBarrelOnPost(POST2B) == -1){
+						system.mutex_lock("robot");
+						FromPostToPost(post_num, POST2B);
+						system.mutex_unlock("robot");
+						system.echo("Post 2B is work\n");
+					}
+				}
+				array.set(ROBOT_BUSY, 0, 0);
+				dashboard.SetRobotFree(Robot);
+				dashboard.SetTaskProgerss(TaskID, 100);
+				dashboard.SetTaskStatus(TaskID, 2);				
+				break;
+			}	
+		}
+		else{
+			dashboard.SetTaskStatus(TaskID, 0);
+			system.sleep(1000);
+		}
+	}
+}
+
+function FindStand(){
+	start = POST6_1;
+	end = POST6_4;
+	i = start;
+	loop{
+		stand = FindBarrelOnPost(i);
+		if(stand == -1){break;}
+		i = i+1;
+		if(i > end){break;}
+	}
+	return i;
+}
+
+function MoveFromPost2A(){
+	TaskTypeID = array.get(TASK_ARRAY, TASK_MOVE2A_ID);
+	loop{
+		TaskID = dashboard.AddTask("", TaskTypeID, 1);
+		if(IsExit()){
+			break;
+		}
+		loop{
+			if(RobotBusy()){
+				system.sleep(1000);				
+			}
+			else{
+				if(FindBarrelOnPost(POST2A) != -1){			
+					array.set(ROBOT_BUSY, 0, 1);
+					Robot = array.get(ROBOT, 0);
+					dashboard.SetTaskStatus(TaskID, 1);				
+					dashboard.SetTaskProgerss(TaskID, 0);
+					dashboard.SetRobotBusy(Robot, TaskID);
+					stand = FindStand();
+					if (stand == POST6_1){ i = 1;}
+					if (stand == POST6_2){ i = 2;}
+					if (stand == POST6_3){ i = 3;}
+					if (stand == POST6_4){ i = 4;}
+					if(stand >= POST6_1 && stand <= POST6_4){
+						system.mutex_lock("robot");
+						FromPostToPost(POST2A, stand);
+						system.mutex_unlock("robot");
+						system.echo("Post6_",i,"\n");
+					}
+					else{
+						system.echo("\nPost 6 is full\n");
+						dashboard.SetTaskStatus(TaskID, 3);
+						dashboard.SetRobotFree(Robot); 
+						array.set(ROBOT_BUSY, 0, 0);					
+						break;
+					}				
+					dashboard.SetRobotFree(Robot);
+					dashboard.SetTaskProgerss(TaskID, 100);
+					dashboard.SetTaskStatus(TaskID, 2);
+					array.set(ROBOT_BUSY, 0, 0);				
+					break;
+				}
+				else{
+					system.echo("\nPost 2A is empty\n");
+					dashboard.SetTaskStatus(TaskID, 3);
+					array.set(ROBOT_BUSY, 0, 0);
+					break;
+				}
+			}
+		}		
+	}
+}
+
+function MoveFromPost2B(){
+	TaskTypeID = array.get(TASK_ARRAY, TASK_MOVE2B_ID);
+	loop{
+		TaskID = dashboard.AddTask("", TaskTypeID, 1);
+		if(IsExit()){
+			break;
+		}
+		loop{
+			if(RobotBusy()){
+				system.sleep(1000);				
+			}
+			else{
+				if(FindBarrelOnPost(POST2B) != -1){
+					array.set(ROBOT_BUSY, 0, 1);
+					Robot = array.get(ROBOT, 0);
+					dashboard.SetTaskStatus(TaskID, 1);				
+					dashboard.SetTaskProgerss(TaskID, 0);
+					dashboard.SetRobotBusy(Robot, TaskID);
+					
+					stand = FindStand();
+					if (stand == POST6_1){ i = 1;}
+					if (stand == POST6_2){ i = 2;}
+					if (stand == POST6_3){ i = 3;}
+					if (stand == POST6_4){ i = 4;}
+					if(stand >= POST6_1 && stand <= POST6_4){
+						system.mutex_lock("robot");
+						FromPostToPost(POST2B, stand);
+						system.mutex_unlock("robot");
+						system.echo("Post6_",i,"\n");
+					}
+					else{
+						system.echo("\nPost 6 is full\n");
+						dashboard.SetTaskStatus(TaskID, 3);
+						dashboard.SetRobotFree(Robot);
+						array.set(ROBOT_BUSY, 0, 0);					
+						break;
+					}
+					dashboard.SetRobotFree(Robot);
+					dashboard.SetTaskProgerss(TaskID, 100);
+					dashboard.SetTaskStatus(TaskID, 2);
+					array.set(ROBOT_BUSY, 0, 0);				
+					break;
+				}
+				else{
+					system.echo("\nPost 2B is empty\n");
+					dashboard.SetTaskStatus(TaskID, 3);
+					array.set(ROBOT_BUSY, 0, 0);
+					break;
+				}
+			}
+		}
+	}
+}
+
+function CleanBarrel(){
+	TaskTypeID = array.get(TASK_ARRAY, TASK_BARRELS_CLEAN_ID);
+	loop{
+		TaskID = dashboard.AddTask("", TaskTypeID, 1);
+		if(IsExit()){
+			break;
+		}
+		Robot = array.get(ROBOT, 0);
+		s1 = dashboard.GetTaskParam(TaskID, 0);
+		s2 = dashboard.GetTaskParam(TaskID, 1);
+		s3 = dashboard.GetTaskParam(TaskID, 2);
+		s4 = dashboard.GetTaskParam(TaskID, 3);
+		array.set(CONVEER, 0, 0);
+		count = s1+s2+s3+s4;
+		if(count == 0){
+			system.echo("incorrect stands\n");
+			dashboard.SetTaskProgerss(TaskID, 100);
+			dashboard.SetTaskStatus(TaskID, 3);
+		}
+		else{
+			loop{
+				if(RobotBusy()){
+					dashboard.SetTaskStatus(TaskID, 0);
+					system.sleep(1000);
+				}
+				else{
+					dashboard.SetTaskStatus(TaskID, 1);
+					dashboard.SetTaskProgerss(TaskID, 0);
+					dashboard.SetRobotBusy(Robot, TaskID);
+					
+					if(s1){
+						~Post7_Post11(POST6_1);
+						system.sleep(100);
+					}
+					
+					if(s2){
+						~Post7_Post11(POST6_2);
+						system.sleep(100);
+					}
+					if(s3){
+						~Post7_Post11(POST6_3);
+						system.sleep(100);
+					}
+					if(s4){
+						~Post7_Post11(POST6_4);
+						system.sleep(100);
+					}
+					
+					loop{
+						ch = array.get(CONVEER, 0);
+						if(ch == count){break;}
+						else{system.sleep(1000);}
+					}
+					dashboard.SetTaskProgerss(TaskID, 100);
+					dashboard.SetTaskStatus(TaskID, 2);
+					dashboard.SetRobotFree(Robot);					
+					break;
+				}
+			}
+			array.set(ACTIVE_PALLET, 0, 0);
+		}
+	}
+}
+
+function FindOnPallet(pallet_num){
+	if(pallet_num == 1){
+		start = P1B1;
+		end = P1B4;
+	}
+	if(pallet_num == 2){
+		start = P2B1;
+		end = P2B4;
+	}
+	if(pallet_num == 3){
+		start = P3B1;
+		end = P3B4;
+	}
+	if(pallet_num == 4){
+		start = P4B1;
+		end = P4B4;
+	}	
+	i = start;
+	loop{
+		num = FindBarrelOnPost(i);
+		if(num == -1){break;}
+		i = i+1;
+		if(i > end){break;}
+	}
+	return i;
+}
+//sorry for this shitcode, this is an aftermath of nonexisting of global var and lack of real robot blocking 
+function Post7_Post11(Post6_stand){
+	loop{
+		if(!RobotBusy()&& FindBarrelOnPost(POST7) == -1){
+				system.echo(Post6_stand," post 7\n");
+			array.set(ROBOT_BUSY, 0, 1);
+			system.mutex_lock("robot");
+			FromPostToPost(Post6_stand, POST7);
+			system.mutex_unlock("robot");
+			system.sleep(1000);
+			array.set(ROBOT_BUSY, 0, 0);		
+			loop{
+				num = FindBarrelOnPost(POST8);
+				if(num ==-1){
+						system.echo(Post6_stand," post 8\n");
+					cur = FindBarrelOnPost(POST7);
+					array.set(BARRELS_ARRAY, cur, POST8);
+					system.sleep(200);
+					loop{
+						num = FindBarrelOnPost(POST9);
+						if(num == -1){
+								system.echo(Post6_stand," post 9\n");
+							cur = FindBarrelOnPost(POST8);
+							array.set(BARRELS_ARRAY, cur, POST9);
+							system.sleep(200);
+							loop{
+								num = FindBarrelOnPost(POST10);
+								if(num == -1){
+										system.echo(Post6_stand," post 10\n");
+									cur = FindBarrelOnPost(POST9);
+									array.set(BARRELS_ARRAY, cur, POST10);
+									system.sleep(200);
+									loop{
+										num = FindBarrelOnPost(POST11);
+										if(num == -1){
+												system.echo(Post6_stand," post 11\n");
+											cur = FindBarrelOnPost(POST10);
+											array.set(BARRELS_ARRAY, cur, POST11);
+											system.sleep(200);
+											loop{
+												if(!RobotBusy()){
+													array.set(ROBOT_BUSY, 0, 1);
+													system.mutex_lock("robot");
+													FromPostToPost(POST11, POST12);
+													system.mutex_unlock("robot");
+													system.sleep(100);
+													pal = array.get(ACTIVE_PALLET, 0);
+													num = FindOnPallet(pal);
+													system.echo("barell from",Post6_stand," on ",num, "\n");
+													system.mutex_lock("robot");
+													FromPostToPost(POST12, num);
+													system.mutex_unlock("robot");
+													array.set(ROBOT_BUSY, 0, 0);
+													system.sleep(600);
+													break;
+												}
+												else{system.sleep(1000);}
+											}
+											break;
+										}
+										else{system.sleep(1000);}
+									}
+									break;
+								}
+								else{system.sleep(1000);}
+							}
+							break;
+						}
+						else{system.sleep(1000);}
+					}
+					break;
+				}
+				else{system.sleep(1000);}
+			}			
+			break;
+		}
+		else{system.sleep(1000);}
+	}
+	a = array.get(CONVEER, 0);
+	array.set(CONVEER, 0, a+1);
+}
+
+function main(){
+	Init();
+	system.echo("Init complete\n");
+	
+	Robot = dashboard.AddRobot("Robot");
+	array.set(ROBOT, 0, Robot);
+	dashboard.SetRobotConnectionStatus(Robot,2);
+	
+	robot->Joint1_PostForJoint7(0, HOME);
+	
+	dashboard.CreateTaskType("Stop robot's work on pallets zone",0, 0);
+	array.set(TASK_ARRAY, TASK_PALLETS_WORK_OFF_ID, dashboard.RegisterTask("Stop robot's work on pallets zone", 0, 0));
+	~WorkPalletsOFF();
+	
+	dashboard.CreateTaskType("Continue robot's work on pallets zone",0, 0);
+	array.set(TASK_ARRAY, TASK_PALLETS_WORK_ON_ID, dashboard.RegisterTask("Continue robot's work on pallets zone", 0, 0));
+	~WorkPalletsON();
+	
+	dashboard.CreateTaskType("1. Add pallet with empty barrels", 2, 0);
+	dashboard.SetParamName("1. Add pallet with empty barrels", 0, "Pallet number");
+	dashboard.SetParamDefaultValue("1. Add pallet with empty barrels", 0, 0);
+	dashboard.SetParamMinValue("1. Add pallet with empty barrels", 0, 0);
+	dashboard.SetParamMaxValue("1. Add pallet with empty barrels", 0, 4);
+	
+	dashboard.SetParamName("1. Add pallet with empty barrels", 1, "Barrels count");
+	dashboard.SetParamDefaultValue("1. Add pallet with empty barrels", 1, 0);
+	dashboard.SetParamMinValue("1. Add pallet with empty barrels", 1, 0);
+	dashboard.SetParamMaxValue("1. Add pallet with empty barrels", 1, 4);
+	
+	array.set(TASK_ARRAY, TASK_ADD_PALLET_EMPTY_ID, dashboard.RegisterTask("1. Add pallet with empty barrels", 2, 0));
+	~AddPallet(); 
+	
+	dashboard.CreateTaskType("2. Load barrels from pallet", 1, 0);
+	dashboard.SetParamName("2. Load barrels from pallet", 0, "pallet number");
+	dashboard.SetParamDefaultValue("2. Load barrels from pallet", 0, 0);
+	dashboard.SetParamMinValue("2. Load barrels from pallet", 0, 0);
+	dashboard.SetParamMaxValue("2. Load barrels from pallet", 0, 4);
+	array.set(TASK_ARRAY, TASK_BARRELS_LOADING_ID, dashboard.RegisterTask("2. Load barrels from pallet", 1, 0));
+	~LoadBarrels();
+	
+	dashboard.CreateTaskType("3. Clean barrel", 4, 0);
+	dashboard.SetParamName("3. Clean barrel", 0, "P6_S1");
+	dashboard.SetParamDefaultValue("3. Clean barrel", 0, 0);
+	dashboard.SetParamMinValue("3. Clean barrel", 0, 0);
+	dashboard.SetParamMaxValue("3. Clean barrel", 0, 1);
+	
+	dashboard.SetParamName("3. Clean barrel", 1, "P6_S2");
+	dashboard.SetParamDefaultValue("3. Clean barrel", 1, 0);
+	dashboard.SetParamMinValue("3. Clean barrel", 1, 0);
+	dashboard.SetParamMaxValue("3. Clean barrel", 1, 1);
+	
+	dashboard.SetParamName("3. Clean barrel", 2, "P6_S3");
+	dashboard.SetParamDefaultValue("3. Clean barrel", 2, 0);
+	dashboard.SetParamMinValue("3. Clean barrel", 2, 0);
+	dashboard.SetParamMaxValue("3. Clean barrel", 2, 1);
+	
+	dashboard.SetParamName("3. Clean barrel", 3, "P6_S4");
+	dashboard.SetParamDefaultValue("3. Clean barrel", 3, 0);
+	dashboard.SetParamMinValue("3. Clean barrel", 3, 0);
+	dashboard.SetParamMaxValue("3. Clean barrel", 3, 1);
+	
+	array.set(TASK_ARRAY, TASK_BARRELS_CLEAN_ID, dashboard.RegisterTask("3. Clean barrel", 4, 0));
+	~CleanBarrel();	
+	
+	dashboard.CreateTaskType("Barell on Post2A full", 0, 0);
+	array.set(TASK_ARRAY, TASK_MOVE2A_ID, dashboard.RegisterTask("Barell on Post2A full", 0, 0));
+	~MoveFromPost2A();
+	
+	dashboard.CreateTaskType("Barell on Post2B full", 0, 0);
+	array.set(TASK_ARRAY, TASK_MOVE2B_ID, dashboard.RegisterTask("Barell on Post2B full", 0, 0));
+	~MoveFromPost2B();
+	
+	dashboard.CreateTaskType("Move barrel from pallet on Post 1", 0, 1);
+	array.set(TASK_ARRAY, TASK_ADD_PALLET_POST1_ID, dashboard.RegisterTask("Move barrel from pallet on Post 1", 0, 1));
+	
+	dashboard.CreateTaskType("Move barrel from pallet on Post 2", 0, 1);
+	array.set(TASK_ARRAY, TASK_ADD_PALLET_POST2_ID, dashboard.RegisterTask("Move barrel from pallet on Post 2", 0, 1));
+	
+	TaskStopID = dashboard.AddTask("", dashboard.RegisterTask("EndWork", 0, 0), 1);
+	dashboard.SetTaskStatus(TaskStopID, 1);	
+	SetExit(1);	
+	dashboard.SetTaskProgerss(TaskStopID, 100);	
+	dashboard.SetTaskStatus(TaskStopID, 2);	
+}
